@@ -27,18 +27,18 @@ const directiveSticky = {
         this.el.style.width = '100%';
       }
 
-      if (getScrollTop() < stickyElementData.offsetTop) {
+      if (getScrollTop() <= stickyElementData.offsetTop) {
         if (!active) return;
         active = false;
         this.el.style.position = '';
-        this.vm.$el.parentElement.removeChild(holder);
+        this.el.parentElement.removeChild(holder);
       } else {
         if (active) return;
         active = true;
         this.el.style.position = 'fixed';
         this.el.style.top = `${this.params.stickyTop || 0}px`;
         this.el.style.zIndex = `${this.params.zIndex || 1000}`;
-        this.vm.$el.parentElement.insertBefore(holder, this.vm.$el);
+        this.el.parentElement.insertBefore(holder, this.el);
       }
     };
 
