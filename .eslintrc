@@ -1,0 +1,27 @@
+ecmaFeatures:
+  modules: true
+
+rules:
+  indent: [ 1, 2, SwitchCase: 1 ]
+  quotes: [ 1, single ]
+  linebreak-style: [ 1, unix ]
+  semi: [ 0 ]
+  no-undef: [ 1 ]
+  no-console: [ 0 ]
+  no-debug: [ 0 ]
+  no-unused-vars: [ 1 ]
+  space-infix-ops: [ 1 ]
+  no-multi-spaces: [ 1 ]
+  no-fallthrough: [ 0 ]
+  comma-dangle: [1, always-multiline]
+
+globals:
+  VueRating: true
+  VueSwipe: true
+  Vue: true
+
+env:
+  es6: true
+  browser: true
+
+extends: 'eslint:recommended'
