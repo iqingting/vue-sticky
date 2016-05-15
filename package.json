@@ -1,8 +1,8 @@
 {
   "name": "vue-sticky",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "sticky element.",
-  "main": "./src/index.js",
+  "main": "./dist/vue-sticky.js",
   "scripts": {
     "build": "webpack -p",
     "dev": "webpack-dev-server --config ./webpack.example.config.js --inline --hot",
