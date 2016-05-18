@@ -1,6 +1,6 @@
 {
   "name": "vue-sticky",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "sticky element.",
   "main": "./dist/vue-sticky.js",
   "scripts": {

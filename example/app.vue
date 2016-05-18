@@ -1,5 +1,5 @@
 <script>
-import stickyDirective from '../src/index.js'
+import VueSticky from '../src/index.js'
 
 export default {
   data() {
@@ -8,16 +8,19 @@ export default {
     };
   },
   directives: {
-    'sticky': stickyDirective,
+    'sticky': VueSticky,
+  },
+  events: {
+    STICKY_STATE({ isSticky, el }) {
+      console.log(isSticky, el);
+    },
   },
 };
 </script>
 
 <template>
-
   <div v-sticky :z-index="100">to be sticky</div>
   <p v-for="item in fillArray">{{item}}</p>
-  <!-- <div v-sticky :sticky-top="50">to be sticky</div> -->
 </template>
 
 <style>

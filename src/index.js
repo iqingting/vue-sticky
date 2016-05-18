@@ -1,4 +1,4 @@
-const directiveSticky = {
+const VueSticky = {
   params: [
     // sticky 元素脱离文档流时填补的高度
     'holder-height',
@@ -13,8 +13,6 @@ const directiveSticky = {
     var active = false;
 
     const getScrollTop = () => Math.max(document.body.scrollTop, document.documentElement.scrollTop);
-
-    this.__listenEvent = 'ontouchmove' in window ? 'touchmove' : 'scroll';
 
     this.__listenAction = () => {
       if (!this.vm) return;
@@ -32,6 +30,10 @@ const directiveSticky = {
         active = false;
         this.el.style.position = '';
         this.el.parentElement.removeChild(holder);
+        this.vm.$dispatch('STICKY_STATE', {
+          isSticky: false,
+          el: this.el,
+        });
       } else {
         if (active) return;
         active = true;
@@ -39,20 +41,22 @@ const directiveSticky = {
         this.el.style.top = `${this.params.stickyTop || 0}px`;
         this.el.style.zIndex = `${this.params.zIndex || 1000}`;
         this.el.parentElement.insertBefore(holder, this.el);
+        this.vm.$dispatch('STICKY_STATE', {
+          isSticky: true,
+          el: this.el,
+        });
       }
     };
 
     var timer = null;
-    window.addEventListener(this.__listenEvent, () => {
+    window.addEventListener('scroll', () => {
       if (timer) clearTimeout(timer);
-      timer = setTimeout(() => this.__listenAction(), 30);
+      timer = setTimeout(() => this.__listenAction(), 20);
     });
   },
   unbind() {
-    if (this.__listenAction) {
-      window.removeEventListener(this.__listenEvent, this.__listenAction);
-    }
+    window.removeEventListener('scroll', this.__listenAction);
   },
 };
 
-export default directiveSticky;
+export default VueSticky;
