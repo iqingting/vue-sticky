@@ -1,58 +1,70 @@
+import { nextTick } from 'vue';
+
+/**
+ * <!-- Usage -->
+ * <ELEMENT v-sticky
+ *     :z-index="NUMBER"
+ *     :sticky-top="NUMBER"
+ *     :holder-height="NUMBER || CSS_LENGTH">
+ *   <div> <!-- sticky wrapper, IMPORTANT -->
+ *     CONTENT
+ *   </div>
+ * </ELEMENT>
+ */
+
 const VueSticky = {
   params: [
-    // sticky 元素脱离文档流时填补的高度
+    // sticky 元素脱离文档流时填补的高度，如果不填则动态获取
     'holder-height',
     // sticky 元素固定相对屏幕高度
     'sticky-top',
-    // fix 时 元素的z-index
+    // fixed 时 元素的z-index
     'z-index',
   ],
   bind() {
-    const holder = document.createElement('div');
-    var stickyElementData = {};
-    var active = false;
-
-    const getScrollTop = () => Math.max(document.body.scrollTop, document.documentElement.scrollTop);
-
-    this.__listenAction = () => {
-      if (!this.vm) return;
-
-      if (!stickyElementData.height) {
-        stickyElementData.height = this.el.offsetHeight;
-        stickyElementData.offsetTop = this.el.offsetTop;
-        holder.style.height = `${stickyElementData.height}px`;
-        holder.style.visibility = 'hidden';
-        this.el.style.width = '100%';
-      }
-
-      if (getScrollTop() <= stickyElementData.offsetTop) {
-        if (!active) return;
-        active = false;
-        this.el.style.position = '';
-        this.el.parentElement.removeChild(holder);
-        this.vm.$dispatch('STICKY_STATE', {
-          isSticky: false,
-          el: this.el,
-        });
+    function getCssLengthValue(value) {
+      if (typeof value === 'number') {
+        return value + 'px';
       } else {
-        if (active) return;
-        active = true;
-        this.el.style.position = 'fixed';
-        this.el.style.top = `${this.params.stickyTop || 0}px`;
-        this.el.style.zIndex = `${this.params.zIndex || 1000}`;
-        this.el.parentElement.insertBefore(holder, this.el);
-        this.vm.$dispatch('STICKY_STATE', {
-          isSticky: true,
-          el: this.el,
-        });
+        return String(value);
       }
-    };
+    }
 
-    var timer = null;
-    window.addEventListener('scroll', () => {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => this.__listenAction(), 20);
-    });
+    this.params.stickyTop = this.params.stickyTop || 0;
+    this.params.zIndex = this.params.zIndex || 1000;
+
+    this.el.style.position = '-webkit-sticky';
+    this.el.style.position = 'sticky';
+
+    if (~this.el.style.position.indexOf('sticky')) {
+      // 浏览器支持原生 sticky 效果（Currently Safari, Firefox and Chrome Canary）
+      this.el.style.top = this.params.stickyTop + 'px';
+      this.el.style.zIndex = this.params.zIndex;
+    } else {
+      // 设置占位符高度
+      if (this.params.holderHeight != null) {
+        this.el.style.height = getCssLengthValue(this.params.holderHeight);
+      } else {
+        nextTick(() => this.el.style.height = this.el.clientHeight + 'px');
+      }
+
+      const elementChild = this.el.firstElementChild;
+      elementChild.style.left = 0;
+      elementChild.style.right = 0;
+      elementChild.style.top = this.params.stickyTop + 'px';
+      elementChild.style.zIndex = this.params.zIndex;
+
+      this.__listenAction = () => {
+        const offsetTop = this.el.getBoundingClientRect().top;
+        if (offsetTop < this.params.stickyTop) {
+          elementChild.style.position = 'fixed';
+        } else {
+          elementChild.style.position = '';
+        }
+      };
+
+      window.addEventListener('scroll', this.__listenAction);
+    }
   },
   unbind() {
     window.removeEventListener('scroll', this.__listenAction);
