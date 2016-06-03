@@ -6,4 +6,7 @@ module.exports = Object.assign({
     path: __dirname,
     publicPath: '/',
   },
+  devServer: {
+    port: 3000,
+  },
 }, require('./webpack.base'));

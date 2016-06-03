@@ -15,7 +15,7 @@ export default {
 
 <template>
   <p v-for="item in ['before', 'sticky', 'enabled']">{{item}}</p>
-  <nav v-sticky :z-index="100" :sticky-top="50"><div>to be sticky</div></nav>
+  <nav v-sticky :z-index="100" :sticky-top="0"><div>to be sticky</div></nav>
   <p v-for="item in fillArray">{{item}}</p>
 </template>
 

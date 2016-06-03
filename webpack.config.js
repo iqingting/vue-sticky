@@ -2,7 +2,7 @@
 module.exports = Object.assign({
   entry: './src',
   output: {
-    library: 'StickyDirective',
+    library: 'VueSticky',
     libraryTarget: 'umd',
     filename: 'vue-sticky.js',
     path: './dist',
