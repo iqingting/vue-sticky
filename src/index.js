@@ -6,9 +6,7 @@ import { nextTick } from 'vue';
  *     :z-index="NUMBER"
  *     :sticky-top="NUMBER"
  *     :holder-height="NUMBER || CSS_LENGTH">
- *   <div> <!-- sticky wrapper, IMPORTANT -->
- *     CONTENT
- *   </div>
+ *   CONTENT
  * </ELEMENT>
  */
 
@@ -41,25 +39,33 @@ const VueSticky = {
       this.el.style.top = this.params.stickyTop + 'px';
       this.el.style.zIndex = this.params.zIndex;
     } else {
-      // 设置占位符高度
-      if (this.params.holderHeight != null) {
-        this.el.style.height = getCssLengthValue(this.params.holderHeight);
-      } else {
-        nextTick(() => this.el.style.height = this.el.clientHeight + 'px');
-      }
+      const holder = document.createElement('div');
+      nextTick(() => {
+        this.el.parentElement.insertBefore(holder, this.el);
+        holder.appendChild(this.el);
+        // 设置占位符高度
+        if (this.params.holderHeight != null) {
+          holder.style.height = getCssLengthValue(this.params.holderHeight);
+        } else {
+          const clientHeight = this.el.clientHeight;
+          if (clientHeight === 0) {
+            console.warn('元素高度为 0， 请考虑使用 :holder-height 固定 holder 高度');
+          }
+          holder.style.height = clientHeight + 'px';
+        }
 
-      const elementChild = this.el.firstElementChild;
-      elementChild.style.left = 0;
-      elementChild.style.right = 0;
-      elementChild.style.top = this.params.stickyTop + 'px';
-      elementChild.style.zIndex = this.params.zIndex;
+        this.el.style.left = 0;
+        this.el.style.right = 0;
+        this.el.style.top = this.params.stickyTop + 'px';
+        this.el.style.zIndex = this.params.zIndex;
+      });
 
       this.__listenAction = () => {
-        const offsetTop = this.el.getBoundingClientRect().top;
+        const offsetTop = holder.getBoundingClientRect().top;
         if (offsetTop < this.params.stickyTop) {
-          elementChild.style.position = 'fixed';
+          this.el.style.position = 'fixed';
         } else {
-          elementChild.style.position = '';
+          this.el.style.position = '';
         }
       };
 

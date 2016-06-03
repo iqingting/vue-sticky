@@ -24,10 +24,7 @@ directives: {
   :z-index="NUMBER"
   :sticky-top="NUMBER"
   :holder-height="NUMBER || CSS_LENGTH">
-
-  <div> <!-- sticky wrapper, IMPORTANT -->
-    CONTENT
-  </div>
+  CONTENT
 </ELEMENT>
 ...
 ```
