@@ -1,3 +1,9 @@
+extends: 'eslint:recommended'
+
+parserOptions:
+  sourceType: "module"
+  ecmaVersion: 6
+
 ecmaFeatures:
   modules: true
 
@@ -23,5 +29,4 @@ globals:
 env:
   es6: true
   browser: true
-
-extends: 'eslint:recommended'
+  node: true

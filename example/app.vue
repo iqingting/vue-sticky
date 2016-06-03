@@ -10,24 +10,18 @@ export default {
   directives: {
     'sticky': VueSticky,
   },
-  events: {
-    STICKY_STATE({ isSticky, el }) {
-      console.log(isSticky, el);
-    },
-  },
 };
 </script>
 
 <template>
-  <div v-sticky :z-index="100">to be sticky</div>
+  <p v-for="item in ['before', 'sticky', 'enabled']">{{item}}</p>
+  <nav v-sticky :z-index="100" :sticky-top="50"><div>to be sticky</div></nav>
   <p v-for="item in fillArray">{{item}}</p>
 </template>
 
 <style>
   body {
     margin: 0;
-    height: 10000px;
-    /*padding-top: 100px;*/
   }
   div {
     line-height: 200px;
