@@ -1,12 +1,13 @@
 {
   "name": "vue-sticky",
-  "version": "2.0.0",
+  "version": "2.1.1",
   "description": "A directive to sticky element for vue.js.",
   "main": "./dist/vue-sticky.js",
   "scripts": {
     "build": "webpack -p",
     "dev": "webpack-dev-server --config ./webpack.example.config.js --inline --hot",
-    "remote-dev": "webpack-dev-server --config ./webpack.example.config.js --inline --hot --host"
+    "remote-dev": "webpack-dev-server --config ./webpack.example.config.js --inline --hot --host",
+    "prepublish": "npm run build"
   },
   "author": "Guanghui Ren",
   "license": "ISC",

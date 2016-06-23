@@ -1,3 +1,7 @@
+# 2.1.0
+- remove `holder-height` param, its unnecessary because we will get height of directive element dynamic.
+- always get directive position once rolling still the directive be destroy.
+
 # 2.0.0
 
 `vue-sticky` use native `position: sticky;` when avaliabled now.

@@ -12,22 +12,20 @@ const VueSticky = VueSticky.default; // Global variable
 ```
 
 # Use
-```
-...
+
+``` javascript
 directives: {
   'sticky': VueSticky,
 },
-...
+```
 
-...
+``` html
 <ELEMENT v-sticky
   :z-index="NUMBER"
-  :sticky-top="NUMBER"
-  :holder-height="NUMBER || CSS_LENGTH">
+  :sticky-top="NUMBER">
 
   <div> <!-- sticky wrapper, IMPORTANT -->
     CONTENT
   </div>
 </ELEMENT>
-...
 ```
