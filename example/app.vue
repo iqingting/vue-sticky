@@ -21,7 +21,7 @@ export default {
 
 <template>
   <p v-for="item in ['before', 'sticky', 'enabled']">{{item}}</p>
-  <nav v-sticky :z-index="100" :sticky-top="0">
+  <nav v-sticky :z-index="100" :sticky-top="100">
     <div>
       <div v-if="!loading">to be sticky</div>
     </div>
