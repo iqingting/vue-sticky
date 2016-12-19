@@ -12,17 +12,18 @@ const VueSticky = {
         bindings.value.stickyTop) || 0,
       zIndex = ((params && this.params.stickyTop) ?
         this.params.stickyTop :
-        bindings.value.zIndex) || 1000;
+        bindings.value.zIndex) || 1000,
+      elementStyle = (this && this.el ? this.el : element).style;
 
-    element.style.position = '-webkit-sticky';
-    element.style.position = 'sticky';
+    elementStyle.position = '-webkit-sticky';
+    elementStyle.position = 'sticky';
 
     /* eslint-disable no-bitwise */
-    if (~element.style.position.indexOf('sticky')) {
+    if (~elementStyle.position.indexOf('sticky')) {
       /* eslint-enable no-bitwise */
       // 浏览器支持原生 sticky 效果（Currently Safari, Firefox and Chrome Canary）
-      element.style.top = `${stickyTop}px`;
-      element.style.zIndex = zIndex;
+      elementStyle.top = `${stickyTop}px`;
+      elementStyle.zIndex = zIndex;
       return;
     }
     const elementChildStyle = element.firstElementChild.style;
@@ -41,8 +42,8 @@ const VueSticky = {
       const offsetTop = element.getBoundingClientRect().top;
       if (offsetTop <= stickyTop) {
         if (vueStickyActiveVariable) return;
-        if (!element.style.height) {
-          element.style.height = `${element.clientHeight}px`;
+        if (!elementStyle.height) {
+          elementStyle.height = `${element.clientHeight}px`;
         }
         elementChildStyle.position = 'fixed';
         vueStickyActiveVariable = true;
