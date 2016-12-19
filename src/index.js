@@ -1,8 +1,6 @@
 const VueSticky = {
   params: [
-    // sticky 元素固定相对屏幕高度
     'sticky-top',
-    // fixed 时 元素的z-index
     'z-index',
   ],
   bind(element, bindings) {
@@ -54,10 +52,8 @@ const VueSticky = {
       }
     };
 
-    let vueStickyTimerVariable;
     const vueStickyListenAction = () => {
-      if (vueStickyTimerVariable) return;
-      vueStickyTimerVariable = setInterval(check, 200);
+      setTimeout(check, 300);
     };
     /* eslint-disable no-undef */
     window.addEventListener('scroll', vueStickyListenAction);
