@@ -1,62 +1,60 @@
 const VueSticky = {
-  params: [
-    // sticky 元素固定相对屏幕高度
-    'sticky-top',
-    // fixed 时 元素的z-index
-    'z-index',
-  ],
-  bind() {
-    const stickyTop = this.params.stickyTop || 0;
-    const zIndex = this.params.zIndex || 1000;
-    const element = this.el;
+  bind(element, bindings) {
+    const stickyTop = bindings.value.stickyTop || 0,
+      zIndex = bindings.value.zIndex || 1000,
+      transition = bindings.value.transition || 'none',
+      elementStyle = element.style;
 
-    element.style.position = '-webkit-sticky';
-    element.style.position = 'sticky';
+    elementStyle.position = '-webkit-sticky';
+    elementStyle.position = 'sticky';
+    elementStyle.transition = transition;
 
-    if (~element.style.position.indexOf('sticky')) {
+    /* eslint-disable no-bitwise */
+    if (~elementStyle.position.indexOf('sticky')) {
+      /* eslint-enable no-bitwise */
       // 浏览器支持原生 sticky 效果（Currently Safari, Firefox and Chrome Canary）
-      element.style.top = `${stickyTop}px`;
-      element.style.zIndex = zIndex;
+      elementStyle.top = `${stickyTop}px`;
+      elementStyle.zIndex = zIndex;
       return;
     }
+    const elementChildStyle = element.firstElementChild.style;
+    elementChildStyle.left = 0;
+    elementChildStyle.right = 0;
+    elementChildStyle.top = `${stickyTop}px`;
+    elementChildStyle.zIndex = zIndex;
 
-    const elementChild = element.firstElementChild;
-    elementChild.style.left = 0;
-    elementChild.style.right = 0;
-    elementChild.style.top = `${stickyTop}px`;
-    elementChild.style.zIndex = zIndex;
-
-    let active = false;
+    let vueStickyActiveVariable = false;
 
     const check = () => {
       const offsetTop = element.getBoundingClientRect().top;
       if (offsetTop <= stickyTop) {
-        if (active) return;
-        if (!element.style.height) {
-          element.style.height = element.clientHeight + 'px';
+        if (vueStickyActiveVariable) return;
+        if (!elementStyle.height) {
+          elementStyle.height = `${element.clientHeight}px`;
         }
         elementChild.style.position = 'fixed';
-        active = true;
+        vueStickyActiveVariable = true;
       } else {
-        if (!active) return;
+        if (!vueStickyActiveVariable) return;
         elementChild.style.position = '';
-        active = false;
+        vueStickyActiveVariable = false;
       }
     };
 
-    var timer;
-    this.__listenAction = () => {
-      if (timer) return;
-      timer = setInterval(check, 30);
-    }
-
-    window.addEventListener('scroll', this.__listenAction);
+    let vueStickyTimerVariable;
+    const vueStickyListenAction = () => {
+      if (vueStickyTimerVariable) return;
+      vueStickyTimerVariable = setInterval(check, 30);
+    };
+    /* eslint-disable no-undef */
+    window.addEventListener('scroll', vueStickyListenAction);
   },
   unbind() {
-    if (this.__listenAction) {
-      window.removeEventListener('scroll', this.__listenAction);
+    if (vueStickyListenAction) {
+      window.removeEventListener('scroll', vueStickyListenAction);
     }
   },
+  /* eslint-enable no-undef */
 };
 
 export default VueSticky;
