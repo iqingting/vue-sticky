@@ -1,4 +1,10 @@
 const VueSticky = {
+  params: [
+    // sticky 元素固定相对屏幕高度
+    'sticky-top',
+    // fixed 时 元素的z-index
+    'z-index',
+  ],
   bind(element, bindings) {
     const stickyTop = bindings.value.stickyTop || 0,
       zIndex = bindings.value.zIndex || 1000,
