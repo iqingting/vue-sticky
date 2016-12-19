@@ -6,12 +6,10 @@ const VueSticky = {
     'z-index',
   ],
   bind(element, bindings) {
-    const params = (this && this.params) ?
-      this.params :
-      null,
+    const params = (this && this.params) ? this.params : null,
       stickyTop = ((params && this.params.stickyTop) ?
-      this.params.stickyTop :
-      bindings.value.stickyTop) || 0,
+        this.params.stickyTop :
+        bindings.value.stickyTop) || 0,
       zIndex = ((params && this.params.stickyTop) ?
         this.params.stickyTop :
         bindings.value.zIndex) || 1000;
