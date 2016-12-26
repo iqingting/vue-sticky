@@ -6,17 +6,17 @@ export default {
     return {
       fillArray: Array(100).fill().map((item, index) => item = index),
       loading: true,
-    };
+    }
   },
   ready() {
     setTimeout(() => {
-      this.loading = false;
-    }, 2000);
+      this.loading = false
+    }, 2000)
   },
   directives: {
     'sticky': VueSticky,
   },
-};
+}
 </script>
 
 <template>

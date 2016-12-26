@@ -9,4 +9,4 @@ module.exports = Object.assign({
   devServer: {
     port: 3000,
   },
-}, require('./webpack.base'));
+}, require('./webpack.base'))

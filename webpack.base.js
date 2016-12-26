@@ -12,4 +12,4 @@ module.exports = {
       js: 'babel!eslint',
     },
   },
-};
+}

@@ -10,4 +10,4 @@ module.exports = Object.assign({
   externals: {
     'vue': 'Vue',
   },
-}, require('./webpack.base'));
+}, require('./webpack.base'))
