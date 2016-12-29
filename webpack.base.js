@@ -7,5 +7,4 @@ module.exports = {
       { test: /\.js$/, loader: 'buble-loader' },
     ],
   },
-  devtool: 'cheap-eval-source-map',
 }

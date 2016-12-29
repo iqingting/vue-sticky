@@ -1,5 +1,6 @@
 # vue-sticky
 A directive to sticky element for vue.js(2.x).
+> for useage with Vue 1.x, see the [2.x branch](https://github.com/rguanghui/vue-sticky/tree/2.x)
 
 # Install
 `npm install vue-sticky --save`
