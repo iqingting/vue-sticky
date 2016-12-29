@@ -1,14 +1,17 @@
 # vue-sticky
-A directive to sticky element for vue.js.
+A directive to sticky element for vue.js(2.x).
 
 # Install
 `npm install vue-sticky --save`
 
+# Dev
+run `npm install` and `npm run dev`
+
 # Import
 ```javascript
-import VueSticky  from 'vue-sticky'; // Es6 module
+import VueSticky from 'vue-sticky' // Es6 module
 
-const VueSticky = VueSticky.default; // Global variable
+const VueSticky = VueSticky.default // Global variable
 ```
 
 # Use
@@ -20,10 +23,7 @@ directives: {
 ```
 
 ``` html
-<ELEMENT v-sticky
-  :z-index="NUMBER"
-  :sticky-top="NUMBER">
-
+<ELEMENT v-sticky="{ zIndex: NUMBER, stickyTop: NUMBER }">
   <div> <!-- sticky wrapper, IMPORTANT -->
     CONTENT
   </div>

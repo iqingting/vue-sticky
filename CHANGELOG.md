@@ -1,3 +1,6 @@
+# 3.0.0
+- Support vue.js(2.x)
+
 # 2.1.0
 - remove `holder-height` param, its unnecessary because we will get height of directive element dynamic.
 - always get directive position once rolling still the directive be destroy.

@@ -1,62 +1,73 @@
-const VueSticky = {
-  params: [
-    // sticky 元素固定相对屏幕高度
-    'sticky-top',
-    // fixed 时 元素的z-index
-    'z-index',
-  ],
-  bind() {
-    const stickyTop = this.params.stickyTop || 0
-    const zIndex = this.params.zIndex || 1000
-    const element = this.el
+let listenAction
 
-    element.style.position = '-webkit-sticky'
-    element.style.position = 'sticky'
+export default {
+  bind(el, binding) {
+    const params = binding.value || {}
 
-    if (~element.style.position.indexOf('sticky')) {
-      // 浏览器支持原生 sticky 效果（Currently Safari, Firefox and Chrome Canary）
-      element.style.top = `${stickyTop}px`
-      element.style.zIndex = zIndex
+    const stickyTop = params.stickyTop || 0
+    const zIndex = params.zIndex || 1000
+
+    el.style.position = '-webkit-sticky'
+    el.style.position = 'sticky'
+
+    // if the browser support css sticky（Currently Safari, Firefox and Chrome Canary）
+    if (~el.style.position.indexOf('sticky')) {
+      el.style.top = `${stickyTop}px`
+      el.style.zIndex = zIndex
       return
     }
 
-    const elementChild = element.firstElementChild
-    elementChild.style.left = 0
-    elementChild.style.right = 0
-    elementChild.style.top = `${stickyTop}px`
-    elementChild.style.zIndex = zIndex
+    const elementChild = el.firstElementChild
+    elementChild.style.cssText = `left: 0; right: 0; top: ${stickyTop}px; index: ${zIndex}`
 
     let active = false
 
+    const sticky = () => {
+      if (active) {
+        return
+      }
+      if (!el.style.height) {
+        el.style.height = el.offsetHeight + 'px'
+      }
+      elementChild.style.position = 'fixed'
+      active = true
+    }
+
+    const reset = () => {
+      if (!active) {
+        return
+      }
+      elementChild.style.position = ''
+      active = false
+    }
+
     const check = () => {
-      const offsetTop = element.getBoundingClientRect().top
+      const offsetTop = el.getBoundingClientRect().top
       if (offsetTop <= stickyTop) {
-        if (active) return
-        if (!element.style.height) {
-          element.style.height = element.clientHeight + 'px'
-        }
-        elementChild.style.position = 'fixed'
-        active = true
+        sticky()
       } else {
-        if (!active) return
-        elementChild.style.position = ''
-        active = false
+        reset()
       }
     }
 
-    var timer
-    this.__listenAction = () => {
-      if (timer) return
-      timer = setInterval(check, 30)
+    let scrollerTimer // for bad user experience scroll in mobile
+    let scrollEndTimer // for clear scrollerTimer when scroll end
+    listenAction = () => {
+      clearTimeout(scrollEndTimer)
+      scrollEndTimer = setTimeout(() => {
+        clearInterval(scrollerTimer)
+        scrollerTimer = null
+      }, 1000)
+
+      if (!scrollerTimer) {
+        scrollerTimer = setInterval(check, 30)
+      }
     }
 
-    window.addEventListener('scroll', this.__listenAction)
+    window.addEventListener('scroll', listenAction)
   },
+
   unbind() {
-    if (this.__listenAction) {
-      window.removeEventListener('scroll', this.__listenAction)
-    }
+    window.removeEventListener('scroll', listenAction)
   },
 }
-
-export default VueSticky

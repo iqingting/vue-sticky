@@ -2,14 +2,10 @@
 
 module.exports = {
   module: {
-    loaders: [
-      { test: /\.vue$/, loader: 'vue' },
-      { test: /\.js$/, loader: 'babel' },
+    rules: [
+      { test: /\.vue$/, loader: 'vue-loader' },
+      { test: /\.js$/, loader: 'buble-loader' },
     ],
   },
-  vue: {
-    loaders: {
-      js: 'babel!eslint',
-    },
-  },
+  devtool: 'cheap-eval-source-map',
 }

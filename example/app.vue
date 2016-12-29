@@ -2,13 +2,14 @@
 import VueSticky from '../src/index.js'
 
 export default {
+  name: 'App',
   data() {
     return {
       fillArray: Array(100).fill().map((item, index) => item = index),
       loading: true,
     }
   },
-  ready() {
+  mounted() {
     setTimeout(() => {
       this.loading = false
     }, 2000)
@@ -20,25 +21,29 @@ export default {
 </script>
 
 <template>
-  <p v-for="item in ['before', 'sticky', 'enabled']">{{item}}</p>
-  <nav v-sticky :z-index="100" :sticky-top="100">
-    <div>
+<div>
+  <p v-for="item in ['before', 'sticky', 'enabled']">{{ item }}</p>
+  <div v-sticky="{ zIndex: 100, stickyTop: 100 }">
+    <nav>
       <div v-if="!loading">to be sticky</div>
-    </div>
-  </nav>
-  <p v-for="item in fillArray">{{item}}</p>
+    </nav>
+  </div>
+  <p v-for="item in fillArray">{{ item }}</p>
+</div>
 </template>
 
 <style>
   body {
     margin: 0;
     font-size: 2em;
-  }
-  div {
-    line-height: 200px;
-    font-size: 100px;
-    background-color: #eee;
     text-align: center;
-    border-bottom: 1px solid #eee;
+  }
+  p {
+    line-height: 1.2;
+  }
+  nav {
+    background-color: #eee;
+    line-height: 3;
+    box-shadow: 0 8px 20px 0 rgba(0,0,0,.2);
   }
 </style>

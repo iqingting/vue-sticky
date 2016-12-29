@@ -9,11 +9,12 @@
     "remote-dev": "webpack-dev-server --config ./webpack.example.config.js --inline --hot --host",
     "prepublish": "npm run build"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rguanghui/vue-sticky.git"
+  },
   "author": "Guanghui Ren",
   "license": "ISC",
-  "peerDependencies": {
-    "vue": "^1.0.10"
-  },
   "keywords": [
     "vue-sticky",
     "sticky",
@@ -21,22 +22,17 @@
     "sticky-component"
   ],
   "devDependencies": {
-    "babel-cli": "^6.3.15",
-    "babel-core": "^6.3.15",
-    "babel-loader": "^6.2.0",
-    "babel-plugin-transform-runtime": "^6.3.13",
-    "babel-preset-es2015": "^6.3.13",
+    "buble": "^0.15.1",
+    "buble-loader": "^0.4.0",
     "css-loader": "^0.23.1",
     "eslint": "^1.10.3",
     "eslint-loader": "^1.1.1",
-    "file-loader": "^0.8.5",
-    "raw-loader": "^0.5.1",
     "style-loader": "^0.13.0",
-    "url-loader": "^0.5.7",
+    "vue": "^2.1.8",
     "vue-hot-reload-api": "^1.2.2",
-    "vue-html-loader": "^1.0.0",
-    "vue-loader": "^7.3.0",
-    "webpack": "^1.12.9",
-    "webpack-dev-server": "^1.14.0"
+    "vue-loader": "10.0.0",
+    "vue-template-compiler": "^2.1.8",
+    "webpack": "^2.2.0-rc.3",
+    "webpack-dev-server": "^2.2.0-rc.0"
   }
 }
