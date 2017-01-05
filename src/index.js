@@ -2,23 +2,23 @@ let listenAction
 
 export default {
   bind(el, binding) {
-    const params = binding.value || {}
+    const params = binding.value || {},
+      stickyTop = params.stickyTop || 0,
+      zIndex = params.zIndex || 1000,
+      elStyle = el.style
 
-    const stickyTop = params.stickyTop || 0
-    const zIndex = params.zIndex || 1000
-
-    el.style.position = '-webkit-sticky'
-    el.style.position = 'sticky'
+    elStyle.position = '-webkit-sticky'
+    elStyle.position = 'sticky'
 
     // if the browser support css sticky（Currently Safari, Firefox and Chrome Canary）
-    if (~el.style.position.indexOf('sticky')) {
-      el.style.top = `${stickyTop}px`
-      el.style.zIndex = zIndex
+    if (~elStyle.position.indexOf('sticky')) {
+      elStyle.top = `${stickyTop}px`
+      elStyle.zIndex = zIndex
       return
     }
 
-    const elementChild = el.firstElementChild
-    elementChild.style.cssText = `left: 0; right: 0; top: ${stickyTop}px; index: ${zIndex}`
+    const elementChild = el.firstElementChild.style
+    elementChild.cssText = `left: 0; right: 0; top: ${stickyTop}px; index: ${zIndex}`
 
     let active = false
 
@@ -26,10 +26,10 @@ export default {
       if (active) {
         return
       }
-      if (!el.style.height) {
-        el.style.height = el.offsetHeight + 'px'
+      if (!elStyle.height) {
+        elStyle.height = `${el.offsetHeight}px`
       }
-      elementChild.style.position = 'fixed'
+      elementChild.position = 'fixed'
       active = true
     }
 
@@ -37,7 +37,7 @@ export default {
       if (!active) {
         return
       }
-      elementChild.style.position = ''
+      elementChild.position = ''
       active = false
     }
 
@@ -45,23 +45,13 @@ export default {
       const offsetTop = el.getBoundingClientRect().top
       if (offsetTop <= stickyTop) {
         sticky()
-      } else {
-        reset()
+        return
       }
+      reset()
     }
 
-    let scrollerTimer // for bad user experience scroll in mobile
-    let scrollEndTimer // for clear scrollerTimer when scroll end
     listenAction = () => {
-      clearTimeout(scrollEndTimer)
-      scrollEndTimer = setTimeout(() => {
-        clearInterval(scrollerTimer)
-        scrollerTimer = null
-      }, 1000)
-
-      if (!scrollerTimer) {
-        scrollerTimer = setInterval(check, 30)
-      }
+      setTimeout(check, 300);
     }
 
     window.addEventListener('scroll', listenAction)
