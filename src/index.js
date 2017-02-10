@@ -17,7 +17,6 @@ const VueSticky = {
       // 浏览器支持原生 sticky 效果（Currently Safari, Firefox and Chrome Canary）
       element.style.top = `${stickyTop}px`
       element.style.zIndex = zIndex
-      return
     }
 
     const elementChild = element.firstElementChild
