@@ -7,12 +7,20 @@ export default {
     return {
       fillArray: Array(100).fill().map((item, index) => item = index),
       loading: true,
+      stickyConfig: {
+        zIndex: 100,
+        stickyTop: 100
+      },
     }
   },
   mounted() {
     setTimeout(() => {
       this.loading = false
-    }, 2000)
+    }, 1000)
+
+    setTimeout(() => {
+      this.stickyConfig.stickyTop = 300
+    }, 5000)
   },
   directives: {
     'sticky': VueSticky,
@@ -23,7 +31,7 @@ export default {
 <template>
 <div>
   <p v-for="item in ['before', 'sticky', 'enabled']">{{ item }}</p>
-  <div v-sticky="{ zIndex: 100, stickyTop: 100 }">
+  <div v-sticky="stickyConfig">
     <nav>
       <div v-if="!loading">to be sticky</div>
     </nav>

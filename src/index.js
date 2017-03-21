@@ -2,10 +2,10 @@ let listenAction
 
 export default {
   bind(el, binding) {
-    const params = binding.value || {},
-      stickyTop = params.stickyTop || 0,
-      zIndex = params.zIndex || 1000,
-      elStyle = el.style
+    const params = binding.value || {}
+    const stickyTop = params.stickyTop || 0
+    const zIndex = params.zIndex || 1000
+    const elStyle = el.style
 
     elStyle.position = '-webkit-sticky'
     elStyle.position = 'sticky'
@@ -59,5 +59,11 @@ export default {
 
   unbind() {
     window.removeEventListener('scroll', listenAction)
+  },
+
+  update(el, binding) {
+    const params = binding.value || {}
+    el.style.top = `${params.stickyTop}px`
+    el.style.zIndex = params.zIndex
   },
 }

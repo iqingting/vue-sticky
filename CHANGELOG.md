@@ -1,3 +1,6 @@
+# 3.1.0
+- Update style when data has been updated.
+
 # 3.0.0
 - Support vue.js(2.x)
 
