@@ -1,11 +1,14 @@
 let listenAction
+let stickyTop
+let params
+let zIndex
 
 export default {
   bind(el, binding) {
-    const params = binding.value || {}
-    const stickyTop = params.stickyTop || 0
-    const zIndex = params.zIndex || 1000
     const elStyle = el.style
+    const params = binding.value || {}
+    stickyTop = params.stickyTop || 0
+    zIndex = params.zIndex || 1000
 
     elStyle.position = '-webkit-sticky'
     elStyle.position = 'sticky'
@@ -17,8 +20,8 @@ export default {
       return
     }
 
-    const elementChild = el.firstElementChild.style
-    elementChild.cssText = `left: 0; right: 0; top: ${stickyTop}px; z-index: ${zIndex}`
+    let childStyle = el.firstElementChild.style
+    childStyle.cssText = `left: 0; right: 0; top: ${stickyTop}px; z-index: ${zIndex}`
 
     let active = false
 
@@ -29,7 +32,7 @@ export default {
       if (!elStyle.height) {
         elStyle.height = `${el.offsetHeight}px`
       }
-      elementChild.position = 'fixed'
+      childStyle.position = 'fixed'
       active = true
     }
 
@@ -37,7 +40,7 @@ export default {
       if (!active) {
         return
       }
-      elementChild.position = ''
+      childStyle.position = ''
       active = false
     }
 
@@ -63,7 +66,11 @@ export default {
 
   update(el, binding) {
     const params = binding.value || {}
-    el.style.top = `${params.stickyTop}px`
-    el.style.zIndex = params.zIndex
+    stickyTop = params.stickyTop || 0
+    zIndex = params.zIndex || 0
+
+    let childStyle = el.firstElementChild.style
+    el.style.top = childStyle.top = `${stickyTop}px`
+    el.style.zIndex = childStyle.zIndex = zIndex
   },
 }
