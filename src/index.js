@@ -21,7 +21,7 @@ export default {
     }
 
     let childStyle = el.firstElementChild.style
-    childStyle.cssText = `left: 0; right: 0; top: ${stickyTop}px; z-index: ${zIndex}`
+    childStyle.cssText = `left: 0; right: 0; top: ${stickyTop}px; z-index: ${zIndex}; ${childStyle.cssText}`
 
     let active = false
 
