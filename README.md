@@ -30,3 +30,20 @@ directives: {
   </div>
 </ELEMENT>
 ```
+
+## Using with Bootstrap grid
+
+```html
+<div class="row">
+  <div class="col-sm-3" v-sticky> <!-- use on the column element -->
+    <section class="my-menu-bar"> <!-- sticky wrapper, IMPORTANT -->
+      ...
+    </section>
+  </div>
+  <div class="col-sm-9">
+    <section class="my-content">
+      ...
+    </section>
+  </div>
+</div>
+```
