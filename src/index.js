@@ -1,6 +1,5 @@
 let listenAction
 let stickyTop
-let params
 let zIndex
 
 export default {
@@ -9,6 +8,7 @@ export default {
     const params = binding.value || {}
     stickyTop = params.stickyTop || 0
     zIndex = params.zIndex || 1000
+
 
     elStyle.position = '-webkit-sticky'
     elStyle.position = 'sticky'
@@ -19,6 +19,8 @@ export default {
       elStyle.zIndex = zIndex
       return
     }
+
+    elStyle.position = 'relative'
 
     let childStyle = el.firstElementChild.style
     childStyle.cssText = `left: 0; right: 0; top: ${stickyTop}px; z-index: ${zIndex}; ${childStyle.cssText}`
@@ -32,6 +34,7 @@ export default {
       if (!elStyle.height) {
         elStyle.height = `${el.offsetHeight}px`
       }
+      childStyle.willChange = 'transform'
       childStyle.position = 'fixed'
       active = true
     }
@@ -40,7 +43,7 @@ export default {
       if (!active) {
         return
       }
-      childStyle.position = ''
+      childStyle.position = 'absolute'
       active = false
     }
 
@@ -54,7 +57,11 @@ export default {
     }
 
     listenAction = () => {
-      setTimeout(check, 300);
+      if(!window.requestAnimationFrame){
+        return setTimeout(check, 16)
+      }
+      
+      window.requestAnimationFrame(check)
     }
 
     window.addEventListener('scroll', listenAction)
