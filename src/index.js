@@ -74,7 +74,7 @@ export default {
   update(el, binding) {
     const params = binding.value || {}
     stickyTop = params.stickyTop || 0
-    zIndex = params.zIndex || 0
+    zIndex = params.zIndex || 1000
 
     let childStyle = el.firstElementChild.style
     el.style.top = childStyle.top = `${stickyTop}px`
