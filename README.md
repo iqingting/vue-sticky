@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/vue-sticky.svg)](https://www.npmjs.com/package/vue-sticky) [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
 
-Sticky element
+Sticky element. [Live demo](https://jsfiddle.net/anteriovieira/rzwenhpt/).
 
 > for useage with Vue 1.x, see the [2.x branch](https://github.com/rguanghui/vue-sticky/tree/2.x)
 
