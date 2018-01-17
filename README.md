@@ -35,7 +35,6 @@ Vue.use(VueSticky)
 <script src="https://unpkg.com/vue-sticky"></script>
 ```
 
-
 ### Example
 
 ```html
@@ -46,7 +45,7 @@ Vue.use(VueSticky)
 
 ```
 
-or 
+or
 
 ```html
 
@@ -56,28 +55,12 @@ or
 
 ```
 
+### Options
 
-## Development
-
-### Launch visual tests
-
-```bash
-npm run dev
-```
-
-### Launch Karma with coverage
-
-```bash
-npm run dev:coverage
-```
-
-### Build
-
-Bundle the js and css of to the `dist` folder:
-
-```bash
-npm run build
-```
+| Name | Default | Description |
+| ---- | ------  | ----- |
+| top  | `0` | Top position |
+| zIndex | `1000` | Index |
 
 ## License
 
