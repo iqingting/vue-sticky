@@ -1,1 +1,113 @@
-!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.VueSticky=t():e.VueSticky=t()}(this,function(){return function(e){function t(o){if(n[o])return n[o].exports;var i=n[o]={i:o,l:!1,exports:{}};return e[o].call(i.exports,i,i.exports,t),i.l=!0,i.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,o){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:o})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=0)}([function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var o,i,r;t.default={bind:function(e,t){var n=e.style,u=t.value||{};if(i=u.stickyTop||0,r=u.zIndex||1e3,n.position="-webkit-sticky",n.position="sticky",~n.position.indexOf("sticky"))return n.top=i+"px",void(n.zIndex=r);n.position="relative";var s=e.firstElementChild.style;s.cssText="left: 0; right: 0; top: "+i+"px; z-index: "+r+"; "+s.cssText;var c=!1,f=function(){c||(n.height||(n.height=e.offsetHeight+"px"),s.willChange="transform",s.position="fixed",c=!0)},d=function(){c&&(s.position="absolute",c=!1)},p=function(){var t=e.getBoundingClientRect().top;return t<=i?void f():void d()};o=function(){return window.requestAnimationFrame?void window.requestAnimationFrame(p):setTimeout(p,16)},window.addEventListener("scroll",o)},unbind:function(){window.removeEventListener("scroll",o)},update:function(e,t){var n=t.value||{};i=n.stickyTop||0,r=n.zIndex||0;var o=e.firstElementChild.style;e.style.top=o.top=i+"px",e.style.zIndex=o.zIndex=r}}}])});
+/*!
+ * vue-sticky v4.0.0
+ * (c) 2018 Guanghui Ren
+ * Released under the MIT License.
+ */
+
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.VueSticky = global.VueSticky || {})));
+}(this, (function (exports) { 'use strict';
+
+var listenAction;
+var stickyTop;
+var zIndex;
+
+var Sticky = {
+  bind: function bind (el, binding, vnode) {
+    var elStyle = el.style;
+    var params = binding.value || {};
+    stickyTop = params.stickyTop || 0;
+    zIndex = params.zIndex || 1000;
+
+    elStyle.position = '-webkit-sticky';
+    elStyle.position = 'sticky';
+
+    // if the browser support css sticky（Currently Safari, Firefox and Chrome Canary）
+    if (~elStyle.position.indexOf('sticky')) {
+      elStyle.top = stickyTop + "px";
+      elStyle.zIndex = zIndex;
+      return
+    }
+
+    elStyle.position = 'relative';
+
+    var childStyle = el.firstElementChild.style;
+    childStyle.cssText = "left: 0; right: 0; top: " + stickyTop + "px; z-index: " + zIndex + "; " + (childStyle.cssText);
+
+    var active = false;
+
+    var sticky = function () {
+      if (active) {
+        return
+      }
+      if (!elStyle.height) {
+        elStyle.height = (el.offsetHeight) + "px";
+      }
+      childStyle.willChange = 'transform';
+      childStyle.position = 'fixed';
+      active = true;
+    };
+
+    var reset = function () {
+      if (!active) {
+        return
+      }
+      childStyle.position = 'absolute';
+      active = false;
+    };
+
+    var check = function () {
+      var offsetTop = el.getBoundingClientRect().top;
+      if (offsetTop <= stickyTop) {
+        sticky();
+        return
+      }
+      reset();
+    };
+
+    listenAction = function () {
+      if (!window.requestAnimationFrame) {
+        return setTimeout(check, 16)
+      }
+
+      window.requestAnimationFrame(check);
+    };
+
+    window.addEventListener('scroll', listenAction);
+  },
+
+  unbind: function unbind () {
+    window.removeEventListener('scroll', listenAction);
+  },
+
+  update: function update (el, binding) {
+    var params = binding.value || {};
+    stickyTop = params.stickyTop || 0;
+    zIndex = params.zIndex || 1000;
+
+    var childStyle = el.firstElementChild.style;
+    el.style.top = childStyle.top = stickyTop + "px";
+    el.style.zIndex = childStyle.zIndex = zIndex;
+  }
+};
+
+function plugin (Vue) {
+  Vue.directive('Sticky', Sticky);
+}
+
+// Install by default if using the script tag
+if (typeof window !== 'undefined' && window.Vue) {
+  window.Vue.use(plugin);
+}
+
+var version = '4.0.0';
+
+exports['default'] = plugin;
+exports.Sticky = Sticky;
+exports.version = version;
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
