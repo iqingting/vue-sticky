@@ -20,8 +20,6 @@ export default {
       return
     }
 
-    elStyle.position = 'relative'
-
     let childStyle = el.firstElementChild.style
     childStyle.cssText = `left: 0; right: 0; top: ${stickyTop}px; z-index: ${zIndex}; ${childStyle.cssText}`
 
@@ -43,7 +41,7 @@ export default {
       if (!active) {
         return
       }
-      childStyle.position = 'absolute'
+      childStyle.position = ''
       active = false
     }
 
