@@ -32,7 +32,6 @@ export default {
       if (!elStyle.height) {
         elStyle.height = `${el.offsetHeight}px`
       }
-      childStyle.willChange = 'transform'
       childStyle.position = 'fixed'
       active = true
     }
