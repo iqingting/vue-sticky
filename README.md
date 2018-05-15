@@ -24,7 +24,7 @@ directives: {
 ```
 
 ``` html
-<ELEMENT v-sticky="{ zIndex: NUMBER, stickyTop: NUMBER }">
+<ELEMENT v-sticky="{ zIndex: NUMBER, stickyTop: NUMBER, className: STRING}">
   <div> <!-- sticky wrapper, IMPORTANT -->
     CONTENT
   </div>

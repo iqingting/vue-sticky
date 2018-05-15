@@ -1,14 +1,19 @@
 let listenAction
 let stickyTop
 let zIndex
+let className
+let childStyle
 
 export default {
   bind(el, binding) {
+    if (!binding.value) {
+      return
+    }
     const elStyle = el.style
     const params = binding.value || {}
     stickyTop = params.stickyTop || 0
     zIndex = params.zIndex || 1000
-
+    className = params.className || 'vue-sticky'
 
     elStyle.position = '-webkit-sticky'
     elStyle.position = 'sticky'
@@ -20,8 +25,14 @@ export default {
       return
     }
 
-    let childStyle = el.firstElementChild.style
-    childStyle.cssText = `left: 0; right: 0; top: ${stickyTop}px; z-index: ${zIndex}; ${childStyle.cssText}`
+    if (el.firstElementChild) {
+      childStyle = el.firstElementChild.style
+      childStyle.cssText = `left: 0; right: 0; top: ${stickyTop}px; z-index: ${zIndex}; ${childStyle.cssText}`
+    } else {
+      if (window.console && window.console.warn) {
+        window.console.warn('el.firstElementChild is undefined or null', el)
+      }
+    }
 
     let active = false
 
@@ -32,7 +43,10 @@ export default {
       if (!elStyle.height) {
         elStyle.height = `${el.offsetHeight}px`
       }
-      childStyle.position = 'fixed'
+      if (childStyle) {
+        childStyle.position = 'fixed'
+      }
+      el.classList.add(className)
       active = true
     }
 
@@ -40,13 +54,15 @@ export default {
       if (!active) {
         return
       }
-      childStyle.position = ''
+      if (childStyle) {
+        childStyle.position = ''
+      }
       active = false
     }
 
     const check = () => {
       const offsetTop = el.getBoundingClientRect().top
-      if (offsetTop <= stickyTop) {
+      if (stickyTop !== null && offsetTop <= stickyTop) {
         sticky()
         return
       }
@@ -57,7 +73,7 @@ export default {
       if(!window.requestAnimationFrame){
         return setTimeout(check, 16)
       }
-      
+
       window.requestAnimationFrame(check)
     }
 
@@ -69,12 +85,38 @@ export default {
   },
 
   update(el, binding) {
-    const params = binding.value || {}
-    stickyTop = params.stickyTop || 0
-    zIndex = params.zIndex || 1000
+    const elStyle = el.style
+    let childStyle = el.firstElementChild && el.firstElementChild.style
+    if (binding.value) {
+      const params = binding.value || {}
+      stickyTop = params.stickyTop || 0
+      zIndex = params.zIndex || 1000
+      className = params.className
+      el.classList.add(className)
 
-    let childStyle = el.firstElementChild.style
-    el.style.top = childStyle.top = `${stickyTop}px`
-    el.style.zIndex = childStyle.zIndex = zIndex
-  },
+      elStyle.position = '-webkit-sticky'
+      elStyle.position = 'sticky'
+      elStyle.top = `${stickyTop}px`
+      elStyle.zIndex = zIndex
+
+      if (childStyle) {
+        childStyle.top = `${stickyTop}px`
+        childStyle.zIndex = zIndex
+      }
+    } else {
+      stickyTop = null
+      elStyle.position = ''
+      elStyle.top = ''
+      elStyle.zIndex = ''
+      elStyle.height = ''
+      el.classList.remove(className)
+      if (childStyle) {
+        childStyle.position = ''
+        childStyle.top = ''
+        childStyle.zIndex = ''
+        childStyle.height = ''
+      }
+
+    }
+  }
 }
