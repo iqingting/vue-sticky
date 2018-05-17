@@ -10,7 +10,8 @@ export default {
       stickyConfig: {
         zIndex: 80,
         stickyTop: 10,
-        className: 'sticky-element'
+        className: 'sticky-element',
+        disabled: false
       },
       stickyConfigBackup: {},
       msg: 'I am sticky :)'
@@ -25,26 +26,21 @@ export default {
     'sticky': VueSticky,
   },
   watch: {
-    stickyConfig (value) {
+    'stickyConfig.disabled' (value) {
       this.msg = 'I am NOT sticky :('
-      if (value) {
+      if (!value) {
         this.msg = 'I am sticky :)'
       }
     }
   },
   methods: {
     disable () {
-      if (this.stickyConfig) {
-        this.stickyConfigBackup = this.stickyConfig
-      }
-      this.stickyConfig = null
+      this.stickyConfig.disabled = true
     },
 
     update () {
-      if (!this.stickyConfig) {
-        this.stickyConfig = Object.assign(this.stickyConfigBackup, this.stickyConfig)
-      }
-      this.stickyConfig.stickyTop = Math.ceil((Math.random() * 300) % 200)
+      this.stickyConfig.disabled = false
+      this.stickyConfig.stickyTop = Math.ceil((Math.random() * 300) % 100)
     }
   }
 }
@@ -52,7 +48,9 @@ export default {
 
 <template>
 <div>
-  <div v-sticky="{zIndex: 100, stickyTop: 10, className: 'sticky-buttons'}">
+  <p v-for="item in ['before', 'sticky', 'enabled']" :key="item">{{ item }}</p>
+
+  <div v-sticky="{zIndex: 100, stickyTop: 20, className: 'sticky-buttons'}">
     <div>
       <button @click="disable">
         disable sticky
@@ -64,7 +62,8 @@ export default {
     </div>
   </div>
 
-  <p v-for="item in ['before', 'sticky', 'enabled']" :key="item">{{ item }}</p>
+  <hr>
+
   <div v-sticky="stickyConfig">
     <nav>
       <div>
@@ -75,7 +74,7 @@ export default {
       </div>
     </nav>
   </div>
-  <p v-for="item in fillArray">{{ item }}</p>
+  <p v-for="item in fillArray" :key="item">{{ item }}</p>
 </div>
 </template>
 

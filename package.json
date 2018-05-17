@@ -14,6 +14,13 @@
     "url": "https://github.com/rguanghui/vue-sticky.git"
   },
   "author": "Guanghui Ren",
+  "contributors": [
+    {
+      "name": "Omar '0m4r' Adobati",
+      "email": "omar@adobati.it",
+      "url": "https://github.com/0m4r"
+    }
+  ],
   "license": "ISC",
   "keywords": [
     "vue-sticky",
