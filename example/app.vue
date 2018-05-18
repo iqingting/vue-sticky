@@ -5,12 +5,10 @@ export default {
   name: 'App',
   data() {
     return {
-      fillArray: Array(100).fill().map((item, index) => item = index),
       loading: true,
       stickyConfig: {
         zIndex: 80,
         stickyTop: 10,
-        className: 'sticky-element',
         disabled: false
       },
       stickyConfigBackup: {},
@@ -34,11 +32,11 @@ export default {
     }
   },
   methods: {
-    disable () {
+    disable() {
       this.stickyConfig.disabled = true
     },
 
-    update () {
+    update() {
       this.stickyConfig.disabled = false
       this.stickyConfig.stickyTop = Math.ceil((Math.random() * 300) % 100)
     }
@@ -50,15 +48,10 @@ export default {
 <div>
   <p v-for="item in ['before', 'sticky', 'enabled']" :key="item">{{ item }}</p>
 
-  <div v-sticky="{zIndex: 100, stickyTop: 20, className: 'sticky-buttons'}">
+  <div v-sticky="{ zIndex: 100, stickyTop: 20, className: 'sticky-buttons' }">
     <div>
-      <button @click="disable">
-        disable sticky
-      </button>
-
-      <button @click="update">
-        update sticky top value
-      </button>
+      <button @click="disable">disable sticky</button>
+      <button @click="update">update sticky top value</button>
     </div>
   </div>
 
@@ -68,13 +61,12 @@ export default {
     <nav>
       <div>
         {{ msg }}
-        <pre>
-          {{ stickyConfig }}
-        </pre>
+        <pre>{{ stickyConfig }}</pre>
       </div>
     </nav>
   </div>
-  <p v-for="item in fillArray" :key="item">{{ item }}</p>
+
+  <p v-for="item in 100" :key="item">{{ item }}</p>
 </div>
 </template>
 

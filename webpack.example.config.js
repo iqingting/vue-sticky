@@ -7,7 +7,7 @@ module.exports = Object.assign({
     publicPath: '/',
   },
   devServer: {
-    port: 3000,
+    port: 9000,
   },
   devtool: 'cheap-eval-source-map',
 }, require('./webpack.base'))

@@ -1,143 +1,119 @@
+import throttle from './throttle'
+
 let listenAction
 let supportCSSSticky
 
+const getBindingConfig = binding => {
+  const params = binding.value || {}
+  let stickyTop = params.stickyTop || 0
+  let zIndex = params.zIndex || 1000
+  let disabled = params.disabled
+  return { stickyTop, zIndex, disabled }
+}
+
+const getInitialiConfig = el => {
+  return {
+    zIndex: el.style.zIndex,
+  }
+}
+
+const unwatch = () => {
+  window.removeEventListener('scroll', listenAction)
+}
+const watch = () => {
+  window.addEventListener('scroll', listenAction)
+}
+
+let bindingConfig = {}
+let initialConfig = {}
+
 export default {
   bind(el, binding) {
+    bindingConfig = getBindingConfig(binding)
+    initialConfig = getInitialiConfig(el)
+    const { disabled, stickyTop, zIndex } = bindingConfig
+
+    if (disabled) return
 
     const elStyle = el.style
-    const params = binding.value || {}
-    let stickyTop = params.stickyTop || 0
-    let zIndex = params.zIndex || 1000
-    let disabled = params.disabled
-    let childStyle
-
-    if (disabled) {
-      return
-    }
-
     elStyle.position = '-webkit-sticky'
     elStyle.position = 'sticky'
 
-    // if the browser support css sticky（Currently Safari, Firefox and Chrome Canary）
+    let childStyle = el.firstElementChild.style
+
+    // test if the browser support css sticky
     supportCSSSticky = ~elStyle.position.indexOf('sticky')
+
     if (supportCSSSticky) {
       elStyle.top = `${stickyTop}px`
       elStyle.zIndex = zIndex
     } else {
       elStyle.position = ''
-      if (el.firstElementChild) {
-        childStyle = el.firstElementChild.style
-        childStyle.cssText = `left: 0; right: 0; top: ${stickyTop}px; z-index: ${zIndex}; ${childStyle.cssText}`
-      } else {
-        if (window.console && window.console.warn) {
-          window.console.warn('el.firstElementChild is undefined or null', el)
-        }
-      }
+      childStyle.cssText = `left: 0; right: 0; top: ${stickyTop}px; z-index: ${zIndex}; ${childStyle.cssText}`
     }
 
     let active = false
 
     const sticky = () => {
-      let className = binding.value.className
-      if (className) {
-        el.classList.add(className)
+      if (supportCSSSticky || active) return
+      if (!elStyle.height) {
+        elStyle.height = `${el.offsetHeight}px`
       }
-      if ( !supportCSSSticky ) {
-        if (active) {
-          return
-        }
-        if (!elStyle.height) {
-          elStyle.height = `${el.offsetHeight}px`
-        }
-        if (childStyle) {
-          childStyle.position = 'fixed'
-        }
-
-        active = true
+      if (childStyle) {
+        childStyle.position = 'fixed'
       }
+      active = true
     }
 
     const reset = () => {
-      let className = binding.value.className
-      if (className) {
-        el.classList.remove(className)
-      }
-      if (!supportCSSSticky) {
-        if (!active) {
-          return
-        }
-        if (childStyle) {
-          childStyle.position = ''
-        }
-        active = false
-      }
+      if (supportCSSSticky || !active) return
+      childStyle.position = 'static'
+      active = false
     }
 
-    const check = () => {
-      let disabled = binding.value.disabled
-      let stickyTop = binding.value.stickyTop
-      if (!disabled) {
-        const offsetTop = el.getBoundingClientRect().top
-        if (offsetTop <= stickyTop) {
-          sticky()
-          return
-        }
-        reset()
+    listenAction = throttle(() => {
+      const offsetTop = el.getBoundingClientRect().top
+      if (offsetTop <= stickyTop) {
+        return sticky()
       }
-    }
+      reset()
+    })
 
-    listenAction = () => {
-      if(!window.requestAnimationFrame){
-        return setTimeout(check, 16)
-      }
-
-      window.requestAnimationFrame(check)
-    }
-
-    window.addEventListener('scroll', listenAction)
+    watch()
   },
 
-  unbind() {
-    window.removeEventListener('scroll', listenAction)
-  },
+  unbind: unwatch,
 
   update(el, binding) {
-    const elStyle = el.style
-    const params = binding.value || {}
-    let stickyTop = params.stickyTop || 0
-    let zIndex = params.zIndex || 1000
-    let className = params.className
-    let disabled = params.disabled
-    let childStyle
-    childStyle = el.firstElementChild && el.firstElementChild.style
+    bindingConfig = getBindingConfig(binding)
+    const { stickyTop, zIndex } = bindingConfig
 
-    if (!disabled) {
-      stickyTop = params.stickyTop || 0
-      zIndex = params.zIndex || 1000
-
-      elStyle.position = '-webkit-sticky'
-      elStyle.position = 'sticky'
-      elStyle.top = `${stickyTop}px`
-      elStyle.zIndex = zIndex
-
-      if (!supportCSSSticky && childStyle) {
-        childStyle.top = `${stickyTop}px`
-        childStyle.zIndex = zIndex
-      }
+    let childStyle = el.firstElementChild.style
+    if (supportCSSSticky) {
+      el.style.top = `${stickyTop}px`
+      el.style.zIndex = zIndex
     } else {
-      elStyle.position = ''
-      elStyle.top = ''
-      elStyle.zIndex = ''
-      elStyle.height = ''
-      if (className) {
-        el.classList.remove(className)
-      }
-      if (childStyle) {
+      childStyle.top = `${stickyTop}px`
+      childStyle.zIndex = zIndex
+    }
+
+    if (bindingConfig.disabled) {
+      if (supportCSSSticky) {
+        el.style.position = ''
+      } else {
         childStyle.position = ''
         childStyle.top = ''
-        childStyle.zIndex = ''
-        childStyle.height = ''
+        childStyle.zIndex = initialConfig.zIndex
+        unwatch()
       }
+      return
     }
-  }
+
+    if (supportCSSSticky) {
+      el.style.position = '-webkit-sticky'
+      el.style.position = 'sticky'
+    } else {
+      watch()
+    }
+  },
 }
