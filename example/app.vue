@@ -9,6 +9,7 @@ export default {
       stickyConfig: {
         zIndex: 80,
         stickyTop: 10,
+        stickyBottom: null,
         disabled: false
       },
       stickyConfigBackup: {},
@@ -36,9 +37,16 @@ export default {
       this.stickyConfig.disabled = true
     },
 
-    update() {
+    updateTop() {
       this.stickyConfig.disabled = false
       this.stickyConfig.stickyTop = Math.ceil((Math.random() * 300) % 100)
+      this.stickyConfig.stickyBottom = null
+    },
+
+    updateBottom() {
+      this.stickyConfig.disabled = false
+      this.stickyConfig.stickyBottom = Math.ceil((Math.random() * 300) % 100)
+      this.stickyConfig.stickyTop = null
     }
   }
 }
@@ -51,22 +59,34 @@ export default {
   <div v-sticky="{ zIndex: 100, stickyTop: 20, className: 'sticky-buttons' }">
     <div>
       <button @click="disable">disable sticky</button>
-      <button @click="update">update sticky top value</button>
+      <button @click="updateTop">update sticky top value</button>
+      <button @click="updateBottom">update sticky bottom value</button>      
     </div>
   </div>
 
   <hr>
 
-  <div v-sticky="stickyConfig">
+  <div v-show="stickyConfig.stickyTop >= 0" v-sticky="stickyConfig">
     <nav>
       <div>
-        {{ msg }}
+        {{ msg }} top
         <pre>{{ stickyConfig }}</pre>
       </div>
     </nav>
   </div>
 
   <p v-for="item in 100" :key="item">{{ item }}</p>
+
+  <div v-show="stickyConfig.stickyBottom >= 0" v-sticky="stickyConfig">
+    <nav>
+      <div>
+        {{ msg }} bottom
+        <pre>{{ stickyConfig }}</pre>
+      </div>
+    </nav>
+  </div>
+
+  <p v-for="item in 'abcde'" :key="item">{{ item }}</p>
 </div>
 </template>
 

@@ -6,9 +6,10 @@ let supportCSSSticky
 const getBindingConfig = binding => {
   const params = binding.value || {}
   let stickyTop = params.stickyTop || 0
+  let stickyBottom = params.stickyBottom || 0
   let zIndex = params.zIndex || 1000
   let disabled = params.disabled
-  return { stickyTop, zIndex, disabled }
+  return { stickyTop, stickyBottom, zIndex, disabled }
 }
 
 const getInitialiConfig = el => {
@@ -31,7 +32,7 @@ export default {
   bind(el, binding) {
     bindingConfig = getBindingConfig(binding)
     initialConfig = getInitialiConfig(el)
-    const { disabled, stickyTop, zIndex } = bindingConfig
+    const { disabled, stickyTop, stickyBottom, zIndex } = bindingConfig
 
     if (disabled) return
 
@@ -45,11 +46,20 @@ export default {
     supportCSSSticky = ~elStyle.position.indexOf('sticky')
 
     if (supportCSSSticky) {
-      elStyle.top = `${stickyTop}px`
+      if (stickyTop >= 0) {
+        elStyle.top = `${stickyTop}px`
+      } else {
+        elStyle.bottom = `${stickyBottom}px`
+      }
+      
       elStyle.zIndex = zIndex
     } else {
       elStyle.position = ''
-      childStyle.cssText = `left: 0; right: 0; top: ${stickyTop}px; z-index: ${zIndex}; ${childStyle.cssText}`
+      if (stickyTop >= 0) {
+        childStyle.cssText = `left: 0; right: 0; top: ${stickyTop}px; bottom: auto; z-index: ${zIndex}; ${childStyle.cssText}`
+      } else {
+        childStyle.cssText = `left: 0; right: 0; top: auto; bottom: ${stickyBottom}px; z-index: ${zIndex}; ${childStyle.cssText}`
+      }
     }
 
     let active = false
@@ -72,10 +82,18 @@ export default {
     }
 
     listenAction = throttle(() => {
-      const offsetTop = el.getBoundingClientRect().top
-      if (offsetTop <= stickyTop) {
-        return sticky()
+      if (stickyTop >= 0) {
+        const offsetTop = el.getBoundingClientRect().top
+        if (offsetTop <= stickyTop) {
+          return sticky()
+        }
+      } else {
+        const offsetBottom = el.getBoundingClientRect().bottom        
+        if (offsetBottom >= window.innerHeight - stickyBottom) {
+          return sticky()
+        }
       }
+      
       reset()
     })
 
@@ -86,14 +104,24 @@ export default {
 
   update(el, binding) {
     bindingConfig = getBindingConfig(binding)
-    const { stickyTop, zIndex } = bindingConfig
+    const { stickyTop, stickyBottom, zIndex } = bindingConfig
 
     let childStyle = el.firstElementChild.style
     if (supportCSSSticky) {
-      el.style.top = `${stickyTop}px`
+      if (stickyTop >= 0) {
+        el.style.top = `${stickyTop}px`
+      } else {
+        el.style.bottom = `${stickyBottom}px`
+      }
       el.style.zIndex = zIndex
     } else {
-      childStyle.top = `${stickyTop}px`
+      if (stickyTop >= 0) {
+        childStyle.top = `${stickyTop}px`
+        childStyle.bottom = ''
+      } else {
+        childStyle.bottom = `${stickyBottom}px`
+        childStyle.top = ''
+      }
       childStyle.zIndex = zIndex
     }
 
@@ -103,6 +131,7 @@ export default {
       } else {
         childStyle.position = ''
         childStyle.top = ''
+        childStyle.bottom = ''
         childStyle.zIndex = initialConfig.zIndex
         unwatch()
       }
