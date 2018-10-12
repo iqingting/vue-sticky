@@ -11,7 +11,7 @@ const getBindingConfig = binding => {
   return { stickyTop, zIndex, disabled }
 }
 
-const getInitialiConfig = el => {
+const getInitialConfig = el => {
   return {
     zIndex: el.style.zIndex,
   }
@@ -30,7 +30,7 @@ let initialConfig = {}
 export default {
   bind(el, binding) {
     bindingConfig = getBindingConfig(binding)
-    initialConfig = getInitialiConfig(el)
+    initialConfig = getInitialConfig(el)
     const { disabled, stickyTop, zIndex } = bindingConfig
 
     if (disabled) return
