@@ -49,18 +49,21 @@ export default {
       elStyle.zIndex = zIndex
     } else {
       elStyle.position = ''
-      childStyle.cssText = `left: 0; right: 0; top: ${stickyTop}px; z-index: ${zIndex}; ${childStyle.cssText}`
+      childStyle.top = `${stickyTop}px`
+      childStyle.zIndex = zIndex
     }
 
     let active = false
 
-    const sticky = () => {
+    const sticky = (left, right) => {
       if (supportCSSSticky || active) return
       if (!elStyle.height) {
         elStyle.height = `${el.offsetHeight}px`
       }
       if (childStyle) {
         childStyle.position = 'fixed'
+        childStyle.left = `${left}px`
+        childStyle.right = `${right}px`
       }
       active = true
     }
@@ -73,8 +76,12 @@ export default {
 
     listenAction = throttle(() => {
       const offsetTop = el.getBoundingClientRect().top
+      const offsetLeft = el.getBoundingClientRect().left
+      const windowWidth = document.documentElement.clientWidth
+      const offsetRight = el.getBoundingClientRect().right
+      console.log(el.getBoundingClientRect())
       if (offsetTop <= stickyTop) {
-        return sticky()
+        return sticky(offsetLeft, windowWidth-offsetRight)
       }
       reset()
     })
